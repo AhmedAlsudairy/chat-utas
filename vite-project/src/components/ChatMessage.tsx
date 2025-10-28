@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './ChatMessage.css';
 
 interface Source {
@@ -24,6 +24,7 @@ interface ChatMessageProps {
 
 export const ChatMessage = ({ message }: ChatMessageProps) => {
   const messageRef = useRef<HTMLDivElement>(null);
+  const [isSourcesExpanded, setIsSourcesExpanded] = useState(false);
 
   useEffect(() => {
     messageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -131,44 +132,52 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
 
       {message.sources && message.sources.length > 0 && (
         <div className="message-sources">
-          <div className="sources-header">
+          <div 
+            className="sources-header clickable" 
+            onClick={() => setIsSourcesExpanded(!isSourcesExpanded)}
+          >
+            <span className={`sources-arrow ${isSourcesExpanded ? 'expanded' : ''}`}>
+              ▶
+            </span>
             <span className="sources-icon">📚</span>
             <span className="sources-label">
-              <span className="ltr">Sources</span>
+              <span className="ltr">Sources ({message.sources.length})</span>
               <span className="separator">|</span>
-              <span className="rtl" dir="rtl">المصادر</span>
+              <span className="rtl" dir="rtl">المصادر ({message.sources.length})</span>
             </span>
           </div>
-          <div className="sources-list">
-            {message.sources.map((source, idx) => {
-              const previewIsArabic = hasArabic(source.preview);
-              return (
-                <div key={idx} className="source-item">
-                  <div className="source-header">
-                    <span className="source-number">{idx + 1}</span>
-                    <div className="source-filename">
-                      <span className="file-icon">📄</span>
-                      <span className="file-name">{source.filename}</span>
+          {isSourcesExpanded && (
+            <div className="sources-list">
+              {message.sources.map((source, idx) => {
+                const previewIsArabic = hasArabic(source.preview);
+                return (
+                  <div key={idx} className="source-item">
+                    <div className="source-header">
+                      <span className="source-number">{idx + 1}</span>
+                      <div className="source-filename">
+                        <span className="file-icon">📄</span>
+                        <span className="file-name">{source.filename}</span>
+                      </div>
+                    </div>
+                    <div className="source-metadata">
+                      <span className="source-chunk">
+                        Section {source.chunkIndex + 1}
+                      </span>
+                      <span className="source-score">
+                        {Math.round(source.score * 100)}% match
+                      </span>
+                    </div>
+                    <div 
+                      className={`source-preview ${previewIsArabic ? 'rtl' : 'ltr'}`}
+                      dir={previewIsArabic ? 'rtl' : 'ltr'}
+                    >
+                      {source.preview}
                     </div>
                   </div>
-                  <div className="source-metadata">
-                    <span className="source-chunk">
-                      Section {source.chunkIndex + 1}
-                    </span>
-                    <span className="source-score">
-                      {Math.round(source.score * 100)}% match
-                    </span>
-                  </div>
-                  <div 
-                    className={`source-preview ${previewIsArabic ? 'rtl' : 'ltr'}`}
-                    dir={previewIsArabic ? 'rtl' : 'ltr'}
-                  >
-                    {source.preview}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>
