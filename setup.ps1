@@ -28,7 +28,7 @@ Write-Host "✅ Backend dependencies installed" -ForegroundColor Green
 # Install frontend dependencies
 Write-Host ""
 Write-Host "📦 Installing frontend dependencies..." -ForegroundColor Yellow
-Set-Location vite-project
+Set-Location chat-widget
 npm install
 
 if ($LASTEXITCODE -ne 0) {
@@ -64,10 +64,10 @@ Write-Host "2. Start the MCP Server (Terminal 1):" -ForegroundColor White
 Write-Host "   npm start" -ForegroundColor Gray
 Write-Host ""
 Write-Host "3. Start the React Frontend (Terminal 2):" -ForegroundColor White
-Write-Host "   cd vite-project" -ForegroundColor Gray
+Write-Host "   cd chat-widget" -ForegroundColor Gray
 Write-Host "   npm run dev" -ForegroundColor Gray
 Write-Host ""
 Write-Host "4. Open browser: http://localhost:5173" -ForegroundColor White
 Write-Host ""
-Write-Host "📚 Add PDF files to the 'doc' folder to get started!" -ForegroundColor Cyan
+Write-Host "📚 Add TXT files to the 'doc' folder to get started!" -ForegroundColor Cyan
 Write-Host ""

@@ -5,5 +5,5 @@ Write-Host "Make sure MCP Server is running on port 3001!" -ForegroundColor Yell
 Write-Host "Press Ctrl+C to stop the dev server" -ForegroundColor Yellow
 Write-Host ""
 
-Set-Location vite-project
+Set-Location chat-widget
 npm run dev

@@ -31,7 +31,7 @@ sam/
 │   ├── server.js                           # Main server with WebSocket
 │   ├── documentProcessorOCR.js             # Document processing & RAG
 │   └── mcpProtocol.js                      # MCP protocol implementation
-├── vite-project/                           # React + TypeScript Frontend
+├── chat-widget/                            # React + TypeScript Frontend
 │   └── src/
 │       ├── App.tsx                         # Modal widget main component
 │       ├── App.css                         # Modal & chat styles
@@ -62,7 +62,7 @@ sam/
 npm install
 
 # Install frontend dependencies
-cd vite-project
+cd chat-widget
 npm install --force
 cd ..
 ```
@@ -98,7 +98,7 @@ DOC_FOLDER=./doc
 npm start
 
 # Terminal 2 - Start Frontend
-cd vite-project
+cd chat-widget
 npm run dev
 ```
 
@@ -156,7 +156,7 @@ npm run dev
 
 ### Change Modal Position
 
-Edit `vite-project/src/App.css`:
+Edit `chat-widget/src/App.css`:
 
 ```css
 .chat-toggle-btn {
@@ -167,7 +167,7 @@ Edit `vite-project/src/App.css`:
 
 ### Change Color Theme
 
-Edit `vite-project/src/App.css` and `ChatMessage.css`:
+Edit `chat-widget/src/App.css` and `ChatMessage.css`:
 
 ```css
 /* Primary blue: #1976d2 */
@@ -177,7 +177,7 @@ Edit `vite-project/src/App.css` and `ChatMessage.css`:
 
 ### Adjust Modal Size
 
-Edit `vite-project/src/App.css`:
+Edit `chat-widget/src/App.css`:
 
 ```css
 .chat-modal-content {
@@ -233,7 +233,7 @@ Edit `vite-project/src/App.css`:
 ### Build for Production
 
 ```powershell
-cd vite-project
+cd chat-widget
 npm run build
 ```
 
@@ -241,7 +241,7 @@ The `dist/` folder contains production-ready files.
 
 ### Deploy Backend
 
-Update WebSocket URL in `vite-project/src/hooks/useMCPSocket.ts`:
+Update WebSocket URL in `chat-widget/src/hooks/useMCPSocket.ts`:
 
 ```typescript
 // Change from:

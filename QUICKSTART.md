@@ -13,7 +13,7 @@ Get your embeddable AI chat widget running in 5 minutes!
 npm install
 
 # Install frontend dependencies
-cd vite-project
+cd chat-widget
 npm install --force
 cd ..
 ```
@@ -47,7 +47,7 @@ DOC_FOLDER=./doc
 npm start
 
 # Terminal 2 - Start Frontend
-cd vite-project
+cd chat-widget
 npm run dev
 ```
 
@@ -121,7 +121,7 @@ sam/
 │   ├── server.js
 │   ├── documentProcessorOCR.js
 │   └── mcpProtocol.js
-├── vite-project/src/                 # Frontend
+├── chat-widget/src/                  # Frontend
 │   ├── App.tsx                       # Modal widget
 │   ├── App.css                       # Modal styles
 │   ├── hooks/                        # WebSocket & chat
@@ -153,7 +153,7 @@ sam/
 
 ### Deploy Online
 
-1. **Build frontend**: `cd vite-project && npm run build`
+1. **Build frontend**: `cd chat-widget && npm run build`
 2. **Deploy to Vercel**: Free, instant deployment
 3. **Deploy backend**: Railway.app or Render.com
 
