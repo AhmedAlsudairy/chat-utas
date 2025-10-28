@@ -2,6 +2,9 @@
 
 A modern, embeddable AI chat widget for university documents with bilingual support (English/Arabic). Built with React 19, TypeScript, MCP Server, and GPT-4.
 
+**Author:** Ahmed Alsudairy  
+**GitHub:** [AhmedAlsudairy/chat-utas](https://github.com/AhmedAlsudairy/chat-utas)
+
 ## ✨ Features
 
 - 💬 **Embeddable Modal Widget** - Floating chat button that opens a modal overlay
@@ -279,9 +282,15 @@ useMCPSocket('wss://your-backend.railway.app')
 4. Test thoroughly
 5. Submit a pull request
 
-## � License
+## 📄 License
 
 MIT License - Feel free to use for personal or commercial projects.
+
+## 👨‍💻 Author
+
+**Ahmed Alsudairy**  
+GitHub: [@AhmedAlsudairy](https://github.com/AhmedAlsudairy)  
+Project: [chat-utas](https://github.com/AhmedAlsudairy/chat-utas)
 
 ## 🆘 Support
 
@@ -290,10 +299,11 @@ For issues or questions:
 2. Review `DOCUMENTATION.md`
 3. Check browser console for errors
 4. Check server console logs
+5. Open an issue on [GitHub](https://github.com/AhmedAlsudairy/chat-utas/issues)
 
 ---
 
-**Built with ❤️ for university document management**
+**Built with ❤️ by Ahmed Alsudairy for university document management**
 
 MIT
 

@@ -2,6 +2,8 @@
 
 Get your embeddable AI chat widget running in 5 minutes!
 
+**Author:** Ahmed Alsudairy | [GitHub](https://github.com/AhmedAlsudairy/chat-utas)
+
 ## ⚡ Fast Setup
 
 ### 1️⃣ Install Dependencies
@@ -175,7 +177,7 @@ sam/
 
 ---
 
-**Ready to deploy? See README.md for deployment options!** 🚀
+**Built by Ahmed Alsudairy** | [GitHub](https://github.com/AhmedAlsudairy/chat-utas) 🚀
 
 1. **Add Embeddings**: Use OpenAI embeddings for better semantic search
 2. **Multi-format Support**: Add support for DOCX, TXT files

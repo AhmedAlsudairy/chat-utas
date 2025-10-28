@@ -2,6 +2,8 @@
 
 Embeddable modal chat widget built with React 19 + TypeScript + Vite.
 
+**Author:** Ahmed Alsudairy | [GitHub](https://github.com/AhmedAlsudairy/chat-utas)
+
 ## 🚀 Quick Start
 
 ```bash
@@ -107,6 +109,10 @@ Output: `dist/` folder ready for deployment
 ## 📖 More Info
 
 See main project README for full documentation.
+
+---
+
+**Created by Ahmed Alsudairy** | [GitHub](https://github.com/AhmedAlsudairy/chat-utas)
 
 // eslint.config.js
 import reactX from 'eslint-plugin-react-x'
