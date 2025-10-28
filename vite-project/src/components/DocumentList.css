@@ -1,0 +1,112 @@
+.document-list {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.document-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.document-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.status-indicator {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.status-indicator.connected {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-indicator.disconnected {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.no-documents {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.no-documents p {
+  margin: 8px 0;
+}
+
+.hint {
+  font-size: 13px;
+  color: #999;
+  font-style: italic;
+}
+
+.document-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.document-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.document-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #4CAF50;
+}
+
+.doc-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.doc-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.doc-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: #333;
+  margin-bottom: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.doc-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: #666;
+}
+
+.doc-meta span {
+  background: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+}

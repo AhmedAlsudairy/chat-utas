@@ -1,0 +1,29 @@
+{
+  "name": "mcp-rag-server",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "MCP Server for Real-time RAG with GPT",
+  "main": "mcp-server/server.js",
+  "scripts": {
+    "start": "node mcp-server/server.js",
+    "dev": "node --watch mcp-server/server.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "canvas": "^3.2.0",
+    "chokidar": "^4.0.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "openai": "^4.76.0",
+    "pdf-parse": "^1.1.1",
+    "pdf-to-png-converter": "^3.10.0",
+    "pdf2json": "^3.1.4",
+    "pdfjs-dist": "^4.10.38",
+    "tesseract.js": "^6.0.1",
+    "uuid": "^11.0.5",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
