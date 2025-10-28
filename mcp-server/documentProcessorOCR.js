@@ -185,7 +185,7 @@ export class DocumentProcessorOCR {
     const hasArabic = /[\u0600-\u06FF]/.test(text);
     
     if (hasArabic) {
-      // For Arabic: split by sentences
+      // For Arabic: split by sentences and paragraphs
       const sentences = text.match(/[^.!?؟۔\n]+[.!?؟۔\n]+/g) || [text];
       let currentChunk = '';
       let currentStart = 0;
@@ -197,9 +197,11 @@ export class DocumentProcessorOCR {
             start: currentStart,
             end: currentStart + currentChunk.length
           });
+          
+          // Create overlap with last sentences
           const overlapText = currentChunk.slice(-overlap);
+          currentStart += currentChunk.length - overlapText.length;
           currentChunk = overlapText + sentence;
-          currentStart += currentChunk.length - overlapText.length - sentence.length;
         } else {
           currentChunk += sentence;
         }
@@ -213,13 +215,75 @@ export class DocumentProcessorOCR {
         });
       }
     } else {
-      // English: character-based chunking
-      let start = 0;
-      while (start < text.length) {
-        const end = Math.min(start + chunkSize, text.length);
-        const chunk = text.slice(start, end);
-        chunks.push({ text: chunk, start, end });
-        start += chunkSize - overlap;
+      // English: smart chunking by paragraphs and sentences
+      const paragraphs = text.split(/\n\n+/);
+      let currentChunk = '';
+      let currentStart = 0;
+      let textPosition = 0;
+
+      paragraphs.forEach((paragraph) => {
+        const trimmedPara = paragraph.trim();
+        
+        if (!trimmedPara) {
+          textPosition += paragraph.length + 2;
+          return;
+        }
+
+        // If adding this paragraph exceeds chunk size
+        if ((currentChunk + '\n\n' + trimmedPara).length > chunkSize && currentChunk.length > 0) {
+          chunks.push({
+            text: currentChunk.trim(),
+            start: currentStart,
+            end: currentStart + currentChunk.length
+          });
+          
+          // Create overlap
+          const sentences = currentChunk.match(/[^.!?]+[.!?]+/g) || [currentChunk];
+          const lastSentences = sentences.slice(-2).join(' ');
+          const overlapText = lastSentences.length > overlap ? lastSentences.slice(-overlap) : lastSentences;
+          
+          currentStart = textPosition - overlapText.length;
+          currentChunk = overlapText + '\n\n' + trimmedPara;
+        } else {
+          currentChunk += (currentChunk ? '\n\n' : '') + trimmedPara;
+          if (!currentChunk || currentStart === 0) {
+            currentStart = textPosition;
+          }
+        }
+        
+        textPosition += paragraph.length + 2;
+      });
+
+      // Add final chunk
+      if (currentChunk.trim().length > 0) {
+        chunks.push({
+          text: currentChunk.trim(),
+          start: currentStart,
+          end: currentStart + currentChunk.length
+        });
+      }
+
+      // If no paragraphs found, fallback to character-based
+      if (chunks.length === 0) {
+        let start = 0;
+        while (start < text.length) {
+          const end = Math.min(start + chunkSize, text.length);
+          
+          // Try to break at sentence boundary
+          let breakPoint = end;
+          if (end < text.length) {
+            const nextPeriod = text.indexOf('.', end - 100);
+            if (nextPeriod !== -1 && nextPeriod < end + 100) {
+              breakPoint = nextPeriod + 1;
+            }
+          }
+          
+          const chunk = text.slice(start, breakPoint).trim();
+          if (chunk.length > 0) {
+            chunks.push({ text: chunk, start, end: breakPoint });
+          }
+          start = breakPoint - overlap;
+        }
       }
     }
 
@@ -243,38 +307,104 @@ export class DocumentProcessorOCR {
     const queryNormalized = query.normalize('NFC');
     const isArabicQuery = /[\u0600-\u06FF]/.test(query);
     
+    // Extract query terms with better filtering
     const queryTerms = isArabicQuery 
       ? queryNormalized.split(/\s+/).filter(term => term.length > 1)
-      : query.toLowerCase().split(/\s+/).filter(term => term.length > 3);
+      : query.toLowerCase().split(/\s+/).filter(term => term.length > 2);
 
     const scoredChunks = this.vectorStore.map(chunk => {
       const chunkNormalized = chunk.text.normalize('NFC');
+      const searchText = isArabicQuery ? chunkNormalized : chunk.text.toLowerCase();
+      const searchQuery = isArabicQuery ? queryNormalized : query.toLowerCase();
+      
       let score = 0;
 
+      // 1. Exact phrase match (highest priority)
+      if (searchText.includes(searchQuery)) {
+        score += 50;
+      }
+
+      // 2. Term frequency scoring with position weight
       queryTerms.forEach(term => {
-        const searchText = isArabicQuery ? chunkNormalized : chunk.text.toLowerCase();
         const searchTerm = isArabicQuery ? term : term.toLowerCase();
+        const regex = new RegExp(searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+        const matches = searchText.match(regex) || [];
         
-        const regex = new RegExp(searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-        const count = (searchText.match(regex) || []).length;
-        score += count * (isArabicQuery ? 2 : 1);
+        // Count occurrences with diminishing returns
+        const termCount = Math.min(matches.length, 5);
+        score += termCount * (isArabicQuery ? 3 : 2);
+        
+        // Bonus for term appearing in first 200 chars
+        const firstPart = searchText.substring(0, 200);
+        if (firstPart.includes(searchTerm)) {
+          score += 5;
+        }
       });
 
-      if (score > 0) {
-        const searchText = isArabicQuery ? chunkNormalized : chunk.text.toLowerCase();
-        const searchQuery = isArabicQuery ? queryNormalized : query.toLowerCase();
-        if (searchText.includes(searchQuery)) {
-          score += 10;
+      // 3. Multiple term proximity bonus
+      if (queryTerms.length > 1) {
+        let foundTerms = 0;
+        queryTerms.forEach(term => {
+          const searchTerm = isArabicQuery ? term : term.toLowerCase();
+          if (searchText.includes(searchTerm)) {
+            foundTerms++;
+          }
+        });
+        
+        // Bonus if multiple terms found in same chunk
+        if (foundTerms > 1) {
+          score += foundTerms * 8;
         }
+        
+        // Extra bonus for all terms present
+        if (foundTerms === queryTerms.length) {
+          score += 15;
+        }
+      }
+
+      // 4. Partial word matching (stem matching for English)
+      if (!isArabicQuery) {
+        queryTerms.forEach(term => {
+          if (term.length > 4) {
+            const stem = term.substring(0, term.length - 2);
+            const stemRegex = new RegExp(`\\b${stem}\\w*`, 'gi');
+            const stemMatches = searchText.match(stemRegex) || [];
+            score += stemMatches.length * 0.5;
+          }
+        });
+      }
+
+      // 5. Document-level boost (prefer certain documents if they match)
+      const docData = this.documents.get(chunk.filename);
+      if (docData && docData.metadata.hasArabic === isArabicQuery) {
+        score += 2; // Slight boost for language match
       }
 
       return { ...chunk, score };
     });
 
-    return scoredChunks
+    // Filter and sort results
+    const results = scoredChunks
       .filter(chunk => chunk.score > 0)
-      .sort((a, b) => b.score - a.score)
+      .sort((a, b) => {
+        // Primary sort: by score
+        if (b.score !== a.score) {
+          return b.score - a.score;
+        }
+        // Secondary sort: prefer earlier chunks if scores equal
+        return a.chunkIndex - b.chunkIndex;
+      })
       .slice(0, topK);
+
+    // Normalize scores to 0-1 range for display
+    if (results.length > 0) {
+      const maxScore = results[0].score;
+      results.forEach(result => {
+        result.score = result.score / maxScore;
+      });
+    }
+
+    return results;
   }
 
   getDocumentsList() {
