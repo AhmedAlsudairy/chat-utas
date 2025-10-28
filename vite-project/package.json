@@ -1,8 +1,14 @@
 {
-  "name": "vite-project",
+  "name": "university-ai-assistant-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "Embeddable Modal Chat Widget for University Documents",
+  "author": "Ahmed Alsudairy <https://github.com/AhmedAlsudairy>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AhmedAlsudairy/chat-utas"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

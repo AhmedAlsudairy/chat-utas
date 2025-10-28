@@ -1,8 +1,13 @@
 {
-  "name": "mcp-rag-server",
+  "name": "university-ai-assistant",
   "version": "1.0.0",
   "type": "module",
-  "description": "MCP Server for Real-time RAG with GPT",
+  "description": "MCP Server for University Document RAG with GPT - Bilingual Support (English/Arabic)",
+  "author": "Ahmed Alsudairy <https://github.com/AhmedAlsudairy>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AhmedAlsudairy/chat-utas"
+  },
   "main": "mcp-server/server.js",
   "scripts": {
     "start": "node mcp-server/server.js",
